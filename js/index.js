@@ -1,106 +1,64 @@
-//Funciones
-function ingresarInfo(mensaje){
-    return prompt(mensaje)
-}
-function alerta(mensaje){
-    return alert(mensaje)
-}
 
-function ingresarCaracteristicas() {
-    let altura = parseFloat(ingresarInfo("Ingresa tu altura en centímetros (solo numeros):"));
-    let sexo = ingresarInfo("ingresa tu sexo M ó F");
-    promedioAltura(sexo,altura)
+let presupuesto = parseFloat(prompt("Ingresar dinero disponible para la compra"))
+
+//Funcion de Impuesto IVA
+
+const IVA = 1.21
+
+function precioConIva(i) {
+    return i * IVA   
 }
 
-function promedioAltura(sexo,altura) {
-    switch (sexo) {
-        case "M":
-            if (altura<173) {
-                alerta("Tu altura está por debajo del promedio de Sudamerica")
-            } else {
-                alerta("Tu altura está por encima del promedio de Sudamerica")
-            }
-            break;
-        case "F":
-            if (altura<160) {
-                alerta("Tu altura está por debajo del promedio de Sudamerica")
-            } else {
-                alerta("Tu altura está por encima del promedio de Sudamerica")
-            }
-            break;
-        default:
-            alerta("no ingresaste el sexo, recargue la pagina para volver a intentarlo")
-            break;
-    }
-}
-    
-function despedida() {
-    alerta(user+"!"+" Esperamos que hayas encontrado lo que buscabas")
-}
+//Funcion constructora de productos
 
-//Registro para luego iniciar sesion
+const genCodigoBarras = ()=> parseInt(Math.random()*1000000)
 
-let user = ingresarInfo("ingresar usuario para registrarse:");
-let pass = ingresarInfo("ingresar contraseña deseada:");
-let edad = parseFloat(ingresarInfo("Ingresar tu edad:")); 
-
-
-if(edad < 18){
-    alerta("no podes acceder, ya que eres menor de edad");
-}else{
-    let usuario = ingresarInfo("ingresa tu usuario para acceder")
-    let contrasena = ingresarInfo("ingresa la contraseña")
-        if (user === usuario && pass === contrasena) {
-            alerta("Bienvenido "+user+"! Accediste correctamente");
-            ingresarCaracteristicas();
-        } else {
-            alerta("no se reconoce el usuario o contraseña, por favor vuelva a acceder, tiene 2 intentos más");
-            for (let i = 1; i >= 0; i--) {
-                let usuario = ingresarInfo("ingresa tu usuario para acceder")
-                let contrasena = ingresarInfo("ingresa la contraseña")
-                if (user === usuario && pass === contrasena){
-                    alerta("Bienvenido "+user+"! accediste correctamente");
-                    i = 0
-                    ingresarCaracteristicas();
-                }else{
-                    alerta("te quedan "+i+" intento/s")
-                }
-        }
-    }
-}
-despedida();
-
-//Funcion constructora de Objetos para el array
-
-function Persona(nombre,altura,edad) {
+function Producto(nombre, precio, codigoBarras) {
     this.nombre = nombre
-    this.altura = altura
-    this.edad = edad
+    this.precio = precio
+    this.Codigo_De_Barras = codigoBarras
 }
-//Creacion de la lista vacia
-let listaPersonasEstaturaEdad = []
-//Utilizacion de la funcion constructura al crear objetos "Persona"
-const persona1 = new Persona("Maria",169,29)
-const persona2 = new Persona("Roberto",156,35)
-const persona3 = new Persona("Martin",178,22)
-const persona4 = new Persona("Samuel",175,19)
-const persona5 = new Persona("Natalia",170,40)
-const persona6 = new Persona("Sofia",155,36)
-//Push hacia el Array vacio con las Peronas creadas
-listaPersonasEstaturaEdad.push(persona1,persona2,persona3,persona4,persona5,persona6)
-//Visualizacion de la lista en una tabla para visualizar los datos de cada objeto en cuestion
-console.table(listaPersonasEstaturaEdad);
-//Se aplica la propiedad Reverse para reordenar la lista
-listaPersonasEstaturaEdad.reverse();
-//Se vuelve a visualizar el Array
-console.table(listaPersonasEstaturaEdad);
-//Funcion para modificar los objetos dentro de la lista iterando los mismos y aplicando una suma en la edad de cada persona.
-function sumarEdad() {
-    listaPersonasEstaturaEdad.forEach((persona)=> {
-        persona.edad = persona.edad + 1
-    })
+
+//Lista de productos vacia
+
+const productos = [];
+
+//carga de productos al carrito
+alert("A continuacion podrá cargar los productos a su carrito, siga los pasos atentamente")
+do {
+    let nombreProducto = prompt("Ingresar nombre del producto:")
+    let precioProducto = parseFloat(prompt("Ingresar precio del producto:"))
+    let codigoBarras = genCodigoBarras()
+    productos.push(new Producto(nombreProducto , precioProducto, codigoBarras))
+    continuarCompra = confirm("desea seguir cargando productos al carrito?")
+} while (continuarCompra);
+
+// Suma del total
+
+const totalIva = productos.reduce((i,el)=> i + el.precio,0);
+const totalCompra = precioConIva(parseFloat(totalIva));
+let sobrantePresupuesto =  presupuesto - totalCompra;
+
+//Se comprueba si el presupuesto es Mayor o igual al total a pagar
+if (totalCompra <= presupuesto) {
+    alert("el total de tu compra con el IVA del 21% es: $"+totalCompra.toFixed(2)+" por ende, te sobran: $"+sobrantePresupuesto.toFixed(2));
+} else {
+    alert("No te alcanza el presupuesto para realizar el pago ya que el total con el IVA de 21% es de: $"+totalCompra+". Tendrá la oportunidad de actualizar el presupuesto para llegar al monto necesario para la compra");
+    do {
+        presupuesto = parseFloat(prompt("Ingresar presupuesto total para la compra, Recordá que el monto total es de: $"+totalCompra))
+        seguir = confirm("Desea Confirmar el presupuesto? si apreta en cancelar podrá corregir el monto")
+    } while (seguir != true);
+    if (totalCompra <= presupuesto) {
+        sobrantePresupuesto =  presupuesto - totalCompra;
+        alert("el total de tu compra es: $"+totalCompra.toFixed(2)+" por ende, te sobran: $"+sobrantePresupuesto.toFixed(2))
+    } else {
+        alert("Lo sentimos, pero nuevamente tu presupuesto es insuficiente")
+    }
 }
-//Se llama la funcion sumarEdad para aplicarla en el Array
-sumarEdad(listaPersonasEstaturaEdad)
-//Visualizacion de la lista modificada en la edad
-console.table(listaPersonasEstaturaEdad);
+alert("Gracias por habernos elegido")
+if (totalCompra <= presupuesto){
+    alert("Tu ticket es el siguiente (apreta F12 despues de aceptar)")
+    console.table(productos);
+    console.log("Tu total fue de: $"+totalCompra.toFixed(2));
+    console.log("Te sobraron $"+sobrantePresupuesto.toFixed(2));
+}
