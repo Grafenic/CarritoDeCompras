@@ -62,3 +62,10 @@ if (totalCompra <= presupuesto){
     console.log("Tu total fue de: $"+totalCompra.toFixed(2));
     console.log("Te sobraron $"+sobrantePresupuesto.toFixed(2));
 }
+
+//Dom
+
+let ticket = document.getElementById("ticket")
+
+ticket.innerHTML= `<p> Tu total es de: $${totalCompra.toFixed(2)} </p>`
+

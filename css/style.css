@@ -1,0 +1,19 @@
+body{
+    padding: 0;
+    margin: 0;
+    position: relative;
+    display: flex;
+}
+
+#ticket{
+    
+    position: relative;
+    padding: auto;
+    margin: auto;
+    color: black;
+    background-color: antiquewhite;
+}
+
+p{
+    margin: 1rem;
+}
