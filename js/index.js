@@ -1,6 +1,9 @@
 
 let presupuesto = parseFloat(prompt("Ingresar dinero disponible para la compra"))
-
+//Evitar que recargue la pagina
+function noRecargar(e) {
+    e.preventDefault();
+}
 //Funcion de Impuesto IVA
 
 const IVA = 1.21
@@ -63,9 +66,17 @@ if (totalCompra <= presupuesto){
     console.log("Te sobraron $"+sobrantePresupuesto.toFixed(2));
 }
 
-//Dom
+//Eventos en el Dom
+let ticketEvento = document.querySelector("#ticketEvento")
 
-let ticket = document.getElementById("ticket")
-
-ticket.innerHTML= `<p> Tu total es de: $${totalCompra.toFixed(2)} </p>`
-
+let cliente = document.querySelector("#cliente")
+let formulario = document.querySelector("#formulario")
+formulario.addEventListener("submit",noRecargar)
+let nombre = ""
+cliente.addEventListener("change", ()=> {
+    ticketEvento.innerHTML = "";
+    nombre = cliente.value;
+    ticketEvento.innerHTML= `<p>Tu nombre: ${nombre}</p>
+    <p>Tu presupuesto fue de: $ ${presupuesto}</p> 
+    <p>tu vuelto es de: $${sobrantePresupuesto}</p> `
+});
